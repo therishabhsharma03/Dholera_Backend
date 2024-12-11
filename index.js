@@ -53,7 +53,7 @@ app.post('/submitContactForm',async(req,res)=>{
 app.post('/submitPopUp', async (req, res) => {
     const { name, number, message } = req.body;
 
-    if (!name || !email || !message) {
+    if (!name || !number || !message) {
         return res.status(400).json({ error: 'All fields are required' });
     }
 
