@@ -51,7 +51,7 @@ app.post('/submitContactForm',async(req,res)=>{
 
 })
 app.post('/submitPopUp', async (req, res) => {
-    const { name, email, message } = req.body;
+    const { name, number, message } = req.body;
 
     if (!name || !email || !message) {
         return res.status(400).json({ error: 'All fields are required' });
@@ -62,11 +62,11 @@ app.post('/submitPopUp', async (req, res) => {
         from: 'apicheck11@gmail.com', 
         to: 'manyrishabh@gmail.com', 
         subject: 'New Lead from DholeraNagri.com Form Submission',
-        text: `You have a Lead form submission:\n\nName: ${name}\nEmail: ${email}\nMessage: ${message}`,
+        text: `You have a Lead form submission:\n\nName: ${name}\nPhn no: ${number}\nMessage: ${message}`,
         html: `
             <h3>New Form Submission</h3>
             <p><strong>Name:</strong> ${name}</p>
-            <p><strong>Email:</strong> ${email}</p>
+            <p><strong>Contact Number:</strong> ${number}</p>
             <p><strong>Message:</strong> ${message}</p>
         `,
     };
