@@ -1,15 +1,17 @@
+require('dotenv').config(); // Load environment variables from .env
+
 const express = require('express');
 const cors = require('cors');
 const nodemailer = require('nodemailer');
 const mongoose = require('mongoose');
 const Blog = require("./models/model");
-// Initialize Express app
+
 const app = express();
 app.use(express.json());
 app.use(cors());
 
-
-mongoose.connect('mongodb+srv://manyrishabh:123@cluster0.gv5nn.mongodb.net/')
+// MongoDB connection
+mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log("Connected to DB");
   })
@@ -18,15 +20,16 @@ mongoose.connect('mongodb+srv://manyrishabh:123@cluster0.gv5nn.mongodb.net/')
   });
 
 
+
 // Nodemailer configuration
 const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false,
-    auth: {
-        user: 'apicheck11@gmail.com',
-        pass: 'xjex rlsk vjvj ybne',
-    },
+  host: 'smtp.gmail.com',
+  port: 587,
+  secure: false,
+  auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+  },
 });
 
 app.get('/blogs',async(req,res)=>{
