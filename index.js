@@ -1,11 +1,22 @@
 const express = require('express');
 const cors = require('cors');
 const nodemailer = require('nodemailer');
-
+const mongoose = require('mongoose');
+const Blog = require("./models/model");
 // Initialize Express app
 const app = express();
 app.use(express.json());
 app.use(cors());
+
+
+mongoose.connect('mongodb+srv://manyrishabh:123@cluster0.gv5nn.mongodb.net/')
+  .then(() => {
+    console.log("Connected to DB");
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+
 
 // Nodemailer configuration
 const transporter = nodemailer.createTransport({
@@ -18,6 +29,37 @@ const transporter = nodemailer.createTransport({
     },
 });
 
+app.get('/blogs',async(req,res)=>{
+    try {
+        const blogs = await Blog.find(); 
+        res.status(200).json(blogs); 
+      } catch (error) {
+        res.status(500).json({ error: "Failed to fetch blogs", details: error.message });
+      }
+})
+app.get('/blogs/:id', async (req, res) => {
+    const { id } = req.params;
+    console.log("Received ID:", id);
+  
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      console.log("Invalid ObjectId format");
+      return res.status(400).json({ error: 'Invalid Blog ID format' });
+    }
+  
+    try {
+      const blog = await Blog.findById(id);
+      if (!blog) {
+        console.log("Blog not found in database");
+        return res.status(404).json({ error: 'Blog not found' });
+      }
+      console.log("Found blog:", blog);
+      res.status(200).json(blog);
+    } catch (error) {
+      console.error("Error fetching blog:", error.message);
+      res.status(500).json({ error: 'Failed to fetch the blog', details: error.message });
+    }
+  });
+  
 app.post('/submitContactForm',async(req,res)=>{
 
     const { name, number, city, message } = req.body;
